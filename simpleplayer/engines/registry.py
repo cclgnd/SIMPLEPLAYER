@@ -14,6 +14,7 @@ from .gsf import GsfEngine
 from .usf import UsfEngine
 from .twosf import TwosfEngine
 from .vgm import VgmEngine
+from .qsf import QsfEngine
 
 
 class BackendUnavailableError(EngineError):
@@ -141,10 +142,10 @@ def default_backend_specs() -> list[BackendSpec]:
         ),
         BackendSpec(
             name="QSF",
-            extensions={".qsf", ".miniqsf"},
-            factory=None,
-            status="planned",
-            notes="Fidelity target: aoqsf/QSound-oriented core; keep separate from broad VGM playback.",
+            extensions=QsfEngine.supported_extensions,
+            factory=QsfEngine,
+            status="installed",
+            notes="Fidelity target: aoqsf/QSound-oriented core; isolated via helper process.",
         ),
         BackendSpec(
             name="Hoot/MAME arcade",

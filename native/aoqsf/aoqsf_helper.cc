@@ -11,6 +11,7 @@
 
 typedef int32_t int32;
 typedef uint32_t uint32;
+typedef uint16_t uint16;
 typedef uint8_t uint8;
 typedef uint64_t uint64;
 
@@ -18,6 +19,17 @@ extern "C" {
 int32 qsf_start(uint8 *buffer, uint32 length);
 int32 qsf_sample(void *sample);
 int32 qsf_stop(void);
+
+uint8 qsf_memory_read(uint16 addr);
+uint8 qsf_memory_readport(uint16 addr);
+void qsf_memory_write(uint16 addr, uint8 data);
+void qsf_memory_writeport(uint16 addr, uint8 data);
+
+uint8 memory_read(uint16 addr) { return qsf_memory_read(addr); }
+uint8 memory_readop(uint16 addr) { return qsf_memory_read(addr); }
+uint8 memory_readport(uint16 addr) { return qsf_memory_readport(addr); }
+void memory_write(uint16 addr, uint8 data) { qsf_memory_write(addr, data); }
+void memory_writeport(uint16 addr, uint8 data) { qsf_memory_writeport(addr, data); }
 }
 
 static char g_base_dir[4096];
@@ -59,9 +71,16 @@ static void *load_file_to_buffer(const char *path, unsigned *out_size)
     return buf;
 }
 
-static int load_lib_cb(int libnum, void *lib, unsigned long long size, void *c)
+extern "C" int ao_get_lib(const char *filename, uint8 **buffer, uint64 *length)
 {
-    // Library loading is handled internally by corlett_decode
+    char path[4096];
+    snprintf(path, sizeof(path), "%s/%s", g_base_dir, filename);
+    unsigned size = 0;
+    void *buf = load_file_to_buffer(path, &size);
+    if (!buf)
+        return -1;
+    *buffer = (uint8 *)buf;
+    *length = size;
     return 0;
 }
 

@@ -47,6 +47,7 @@ def main():
         os.path.join(eng_qsf_dir, "kabuki.c"),
         os.path.join(eng_qsf_dir, "z80.c"),
         os.path.join(AOSDK_SRC, "corlett.c"),
+        os.path.join(AOSDK_SRC, "utils.c"),
     ]
 
     zlib_sources = [
